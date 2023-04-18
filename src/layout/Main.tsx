@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import api from "../api";
 
 import AddIcon from "../assets/plus.svg";
+import { EditTaskModal } from "../components/EditTaskModal";
 import { TodoList } from "../components/TodoList";
 
 export function Main() {

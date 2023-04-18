@@ -43,7 +43,7 @@ export function TodoList() {
         ) : (
           <>
             {data.map((task) => {
-              return <Task key={task._id} task={task} />;
+              return <Task key={task.id} task={task} />;
             })}
           </>
         )}

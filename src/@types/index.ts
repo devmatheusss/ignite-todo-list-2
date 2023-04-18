@@ -1,5 +1,5 @@
 export interface DataTypes {
-  _id: string;
+  id: string;
   completed: boolean;
   content: string;
 }

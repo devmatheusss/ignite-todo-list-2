@@ -8,6 +8,8 @@ import {
   DividerHorizontalIcon,
   PlayIcon,
 } from "@radix-ui/react-icons";
+import { PencilSimple } from "@phosphor-icons/react";
+import { EditTaskModal } from "./EditTaskModal";
 
 interface TaskProps {
   task: DataTypes;
@@ -18,21 +20,22 @@ export function Task({ task }: TaskProps) {
   const [isChecked, setIsChecked] = useState(tasks.completed);
 
   const handleClick = () => {
-    api
-      .delete(`/tasks/${tasks._id}`)
-      .then(() => console.log("Task Deleted"))
-      .catch((error) => console.error(error));
+    api.delete(`/tasks/${tasks.id}`).catch((error) => console.error(error));
   };
 
   const handleCheckboxChange = (checked: Checkbox.CheckedState) => {
-    api.patch(`/tasks/${tasks._id}`, {
+    api.patch(`/tasks/${tasks.id}`, {
       completed: checked,
     });
     setIsChecked(!isChecked);
   };
 
+  const handleTaskEdit = () => {
+    prompt("Edite a Tarefa:");
+  };
+
   return (
-    <div className="flex items-start justify-between gap-4 p-5 w-full bg-base-gray-400 border-base-gray-500 rounded-lg border">
+    <div className="flex items-start justify-between gap-4 p-5 w-full bg-base-gray-400 border-base-gray-500 rounded-lg border group">
       <Checkbox.Root
         checked={isChecked}
         onCheckedChange={handleCheckboxChange}
@@ -54,12 +57,15 @@ export function Task({ task }: TaskProps) {
       >
         {tasks.content}
       </p>
-      <button
-        onClick={handleClick}
-        className="text-base-gray-300 hover:text-base-danger transition"
-      >
-        <Trash className="hover:text-base-danger" size={22} weight="bold" />
-      </button>
+      <div className="flex items-center gap-2">
+        <EditTaskModal content={task.content} />
+        <button
+          onClick={handleClick}
+          className="text-base-gray-300 hover:text-base-danger transition"
+        >
+          <Trash size={22} weight="bold" />
+        </button>
+      </div>
     </div>
   );
 }
