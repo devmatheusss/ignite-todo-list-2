@@ -22,7 +22,7 @@ export function EditTaskModal({ content }: { content: string }) {
           <input
             type="text"
             className="h-12 w-full flex flex-1 items-center justify-center rounded-md px-4 outline-none"
-            value={content}
+            defaultValue={content}
           />
 
           <div className="mt-[25px] flex justify-end">

@@ -1,13 +1,19 @@
-import React, { useState } from "react";
-import getTasks from "../hooks/getTasks";
+import { useQueryClient } from "@tanstack/react-query";
 
 import Clipboard from "../assets/clipboard.svg";
 import { Task } from "./Task";
+import { useTasks } from "../hooks/useTasks";
 
 export function TodoList() {
-  const { data } = getTasks();
+  const queryClient = useQueryClient();
 
-  const tasksCompletedFiltered = data.filter((task) => task.completed);
+  const { data } = useTasks({
+    onSuccess: () => {
+      queryClient.invalidateQueries(["tasks"]);
+    },
+  });
+
+  const tasksCompletedFiltered = data?.filter((task) => task.completed);
 
   return (
     <section className="pt-16 flex flex-col gap-6">
@@ -15,22 +21,22 @@ export function TodoList() {
         <div className="flex items-center gap-2">
           <h2 className="text-product-blue">Tarefas criadas</h2>
           <span className="px-2 py-0.5 rounded-xl bg-base-gray-400 text-base-gray-200 text-xs">
-            {data.length}
+            {data?.length}
           </span>
         </div>
         <div className="flex items-center gap-2">
           <h2 className="text-product-purple">Concluídas</h2>
           <span className="px-2 py-0.5 rounded-xl bg-base-gray-400 text-base-gray-200 text-xs">
-            {tasksCompletedFiltered.length} de {data.length}
+            {tasksCompletedFiltered?.length} de {data?.length}
           </span>
         </div>
       </section>
       <section
         className={`w-full rounded-lg border-base-gray-400 ${
-          data.length === 0 ? "py-16 px-6 border-t" : ""
+          data?.length === 0 ? "py-16 px-6 border-t" : ""
         } flex flex-col items-center gap-4`}
       >
-        {data.length === 0 ? (
+        {data?.length === 0 ? (
           <div className="flex flex-col items-center gap-4">
             <img src={Clipboard} alt="Icone de lista" />
             <div className="text-base-gray-300">
@@ -42,7 +48,7 @@ export function TodoList() {
           </div>
         ) : (
           <>
-            {data.map((task) => {
+            {data?.map((task) => {
               return <Task key={task.id} task={task} />;
             })}
           </>

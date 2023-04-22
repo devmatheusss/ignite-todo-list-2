@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import api from "../api";
 
 import AddIcon from "../assets/plus.svg";
-import { EditTaskModal } from "../components/EditTaskModal";
 import { TodoList } from "../components/TodoList";
+import { usePostTask } from "../hooks/useTasks";
 
 export function Main() {
   const [value, setValue] = useState("");
 
+  const { mutate } = usePostTask();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    api.post("/tasks", { content: value, completed: false });
+    mutate({ content: value, completed: false });
     setValue("");
   };
 

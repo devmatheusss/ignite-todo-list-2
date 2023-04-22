@@ -1,30 +1,30 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import * as Checkbox from "@radix-ui/react-checkbox";
-import Trash from "@phosphor-icons/react/dist/icons/Trash";
-import { DataTypes } from "../@types";
-import api from "../api";
-import {
-  CheckIcon,
-  DividerHorizontalIcon,
-  PlayIcon,
-} from "@radix-ui/react-icons";
-import { PencilSimple } from "@phosphor-icons/react";
+import { CheckIcon } from "@radix-ui/react-icons";
+import { Trash } from "@phosphor-icons/react";
+
+import { DataTypes } from "../types";
 import { EditTaskModal } from "./EditTaskModal";
+import api from "../api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useDeleteTask } from "../hooks/useTasks";
 
 interface TaskProps {
   task: DataTypes;
 }
 
 export function Task({ task }: TaskProps) {
-  const [tasks, setTasks] = useState(task);
-  const [isChecked, setIsChecked] = useState(tasks.completed);
+  const [isChecked, setIsChecked] = useState(task.completed);
+  const queryClient = useQueryClient();
 
-  const handleClick = () => {
-    api.delete(`/tasks/${tasks.id}`).catch((error) => console.error(error));
-  };
+  const { isLoading, mutate } = useDeleteTask({
+    onSuccess: () => {
+      queryClient.invalidateQueries(["tasks"]);
+    },
+  });
 
   const handleCheckboxChange = (checked: Checkbox.CheckedState) => {
-    api.patch(`/tasks/${tasks.id}`, {
+    api.patch(`/tasks/${task.id}`, {
       completed: checked,
     });
     setIsChecked(!isChecked);
@@ -55,12 +55,12 @@ export function Task({ task }: TaskProps) {
           task.completed ? "line-through text-base-gray-200" : ""
         }`}
       >
-        {tasks.content}
+        {task.content}
       </p>
       <div className="flex items-center gap-2">
         <EditTaskModal content={task.content} />
         <button
-          onClick={handleClick}
+          onClick={() => mutate(task.id)}
           className="text-base-gray-300 hover:text-base-danger transition"
         >
           <Trash size={22} weight="bold" />
