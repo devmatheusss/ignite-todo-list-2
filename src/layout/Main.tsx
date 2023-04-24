@@ -3,11 +3,12 @@ import React, { useState } from "react";
 import AddIcon from "../assets/plus.svg";
 import { TodoList } from "../components/TodoList";
 import { usePostTask } from "../hooks/useTasks";
+import { Loading } from "../components/Loading";
 
 export function Main() {
   const [value, setValue] = useState("");
 
-  const { mutate } = usePostTask();
+  const { mutate, isLoading } = usePostTask();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,6 +18,7 @@ export function Main() {
 
   return (
     <main className="max-w-3xl m-auto">
+      {isLoading && <Loading />}
       <form
         onSubmit={handleSubmit}
         className="-mt-6 flex items-stretch h-12 gap-2 w-full"

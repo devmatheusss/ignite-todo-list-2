@@ -31,6 +31,9 @@ export function usePostTask() {
   return useMutation(postTask);
 }
 
-export function useDeleteTask({ onSuccess }: UseTasksProps) {
-  return useMutation(deleteTask);
+export function useDeleteTask({ onSuccess }: { onSuccess: () => void }) {
+  return useMutation({
+    mutationFn: deleteTask,
+    onSuccess: onSuccess,
+  });
 }

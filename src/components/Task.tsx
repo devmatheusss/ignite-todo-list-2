@@ -8,6 +8,7 @@ import { EditTaskModal } from "./EditTaskModal";
 import api from "../api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDeleteTask } from "../hooks/useTasks";
+import { Loading } from "./Loading";
 
 interface TaskProps {
   task: DataTypes;
@@ -66,6 +67,7 @@ export function Task({ task }: TaskProps) {
           <Trash size={22} weight="bold" />
         </button>
       </div>
+      {isLoading && <Loading />}
     </div>
   );
 }
